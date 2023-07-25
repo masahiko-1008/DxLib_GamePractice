@@ -81,5 +81,26 @@ void SceneManaGer_Update(void)
 void SceneManager_Draw(void)
 {
 	//äeâÊñ ÇÃï`âÊèàóù
-	swith(Game_Mo)
+	swith(Game_Mode);
+	{
+			case E_TITLE;
+				TitleScene_Draw();
+				break;
+			case E_GAMEMAIN;
+				GameMainScene_Draw();
+				break;
+			case E_GAME_CLEAR;
+				GameClearScene_Draw();
+				break;
+			case E_GAME_OVER;
+				GameOverScene_Draw();
+				break;
+			default;
+				break;
+	}
+}
+
+void Change_Scene(GAME_MODE mode)
+{
+	Next_Mode = mode;
 }
