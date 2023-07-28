@@ -200,6 +200,55 @@ void CreateBlock(void)
 		/*for(i=1;i<HEIGHT-1;i++)
 		{
 		for(j=1;j<WIDTH-1;j++)
+		{
+		if(Block[i][j].image==NULL)
+		{
+		  Block[i][j].image=GetRand(7)+1;
+		}
+	}
+}*/
+//ブロック連鎖チェック
+		for (i = 1; i < HEIGHT - 1; i++)
+		{
+			for (j = 1; j < WIDTH - 1; j++)
+			{
+				Check += combo_check(i, j);
+			}
+		}
+	} while (Check != 0);
 
+	for (i = 0; i < ITEM_MAX; i++)
+	{
+		Item[i] = 0;
+	}
+}
+
+
+void  SelectBlock(void)
+{
+	int TmpBlock;
+	int ReSult;
+
+
+	//カーソル座標の取得
+	Select[SELECT_CURSOR].x = GetMousePositionX() / BLOCKSIZE;
+	Select[SELECT_CURSOR].y = GetMousePositionY() / BLOCKSIZE;
+
+	//選択ブロックの範囲を制御
+	if (Select[SELECT_CURSOR].x < 0)
+	{
+		Select[SELECT_CURSOR].x = 0;
+	}
+	if (Select[SELECT_CURSOR].x > WIDTH - 3)
+	{
+		Select[SELECT_CURSOR].x = WIDTH - 3;
+	}
+	if (Select[SELECT_CURSOR].y < 0)
+	{
+		Select[SELECT_CURSOR].y = 0;
+	}
+	if (Select[SELECT_CURSOR].y > HEIGHT - 3)
+	{
+		Select[SELECT_CURSOR].y = HEIGHT - 3;
 	}
 }
