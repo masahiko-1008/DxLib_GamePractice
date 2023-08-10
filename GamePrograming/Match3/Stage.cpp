@@ -2,7 +2,7 @@
 #include"DxLib.h"
 #include"InputControl.h"
 
-#define HEGHT              (12)    //ブロック配置サイズ(高さ)
+#define HEGHT    　        (12)    //ブロック配置サイズ(高さ)
 #define WIDTH              (12)    //ブロック配置サイズ(幅)
 #define BLOCKSIZE          (48)    //ブロックサイズ
 #define BLOCK_IMAGE_MAX    (10)    //ブロック画像数
@@ -65,7 +65,7 @@ void restore_block(void);
 int StageInitialize(void)
 {
 
-	int ret = 0;
+	int ret = TRUE;
 	int i;
 
 	//画像読み込み
@@ -250,5 +250,44 @@ void  SelectBlock(void)
 	if (Select[SELECT_CURSOR].y > HEIGHT - 3)
 	{
 		Select[SELECT_CURSOR].y = HEIGHT - 3;
+	}
+
+	//クリックでブロックを選択
+	if (GetKeyFlg(MOUSE_INPUT_LEFT)) {
+		//クリック効果音
+		PlaySoundMem(ClickSE, DX_PLAYTYPE_BACK);
+
+
+		if (ClickStatus == E_NONE) {
+			Select[NEXT_CURSOR].x = Select[SELECT_CURSOR].x;
+			Select[NEXT_CURSOR].y = Select[SELECT_CURSOR].y;
+			ClickStatus = E_ONCE;
+		}
+		else if (ClickStatus == E_ONCE &&
+			((abs(Select[NEXT_CURSOR].x - Select[SELECT_CURSOR].x) == 1 &&
+				(abs(Select[NEXT_CURSOR].y - Select[SELECT_CURSOR].y) == 0)) ||
+				(abs(Select[NEXT_CURSOR].x - Select[SELECT_CURSOR].x) == 0 &&
+					abs(Select[NEXT_CURSOR].y - Select[SELECT_CURSOR].y) == 1)))
+
+		{
+
+			Select[TMP_CURSOR].x = Select[SELECT_CURSOR].x;
+			Select[TMP_CURSOR].y = Select[SELECT_CURSOR].y;
+			ClickStatus = E_SECOND;
+		}
+
+	}
+
+	//選択ブロックを交換する。
+	if (ClickStatus == E_SECOND)
+	{
+		TmpBlock = Block[Select[NEXT_CURSOR].y + 1][Select[NEXT_CURSOR].x + 1].image;
+
+		Block[Select[NEXT_CURSOR].y + 1][Select[NEXT_CURSOR].x + 1].image = Block[Select[TMP_CURSOR].y + 1][Select[TMP_CURSOR].x + 1].image = TmpBlock;
+
+		//連鎖が3つ以上か調べる。
+		Result = 0;
+		Result + combo_check(Select[NEXT_CURSOR].y + 1, Select[TMP_CURSOR].x + 1);
+
 	}
 }
