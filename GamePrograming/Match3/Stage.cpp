@@ -2,7 +2,7 @@
 #include"DxLib.h"
 #include"InputControl.h"
 
-#define HEGHT    　        (12)    //ブロック配置サイズ(高さ)
+#define HEIGHT              (12)    //ブロック配置サイズ(高さ)
 #define WIDTH              (12)    //ブロック配置サイズ(幅)
 #define BLOCKSIZE          (48)    //ブロックサイズ
 #define BLOCK_IMAGE_MAX    (10)    //ブロック画像数
@@ -20,7 +20,7 @@ typedef struct
 	int width, height;
 	int image;
 	int backup;
-}T_bject;
+}T_Object;
 
 
 
@@ -31,7 +31,7 @@ typedef struct
 }T_CURSOR;
 
 
-enum 
+enum
 {
 	E_NONE,
 	E_ONCE,
@@ -43,7 +43,7 @@ T_CURSOR Select[3];                      //セレクトカーソル座標
 int Item[ITEM_MAX];
 int ClickStatus;
 int Stage_State;
-int Stage_Misson;
+int Stage_Mission;
 int Stage_Score;
 int ClearFlag;
 
@@ -65,18 +65,18 @@ void restore_block(void);
 int StageInitialize(void)
 {
 
-	int ret = TRUE;
+	int ret = 0;
 	int i;
 
 	//画像読み込み
 	LoadDivGraph("images/block.png", BLOCK_IMAGE_MAX, BLOCK_IMAGE_MAX, 1,
-BLOCKSIZE, BLOCKSIZE, BlockImage);
+		BLOCKSIZE, BLOCKSIZE, BlockImage);
 	StageImage = LoadGraph("images/stage.png");
 
 	//音源読み込み
 	ClickSE = LoadSoundMem("sounds/click_se.mp3");
 	FadeOutSE = LoadSoundMem("sounds/fadeout_se.mp3");
-	MoveBlockSE = LoadSoundMem("sounds/movebllock_se.mp3");
+	MoveBlockSE = LoadSoundMem("sounds/moveblock_se.mp3");
 
 
 	//ブロック生成処理
@@ -126,7 +126,7 @@ void StageDraw(void) {
 	DrawGraph(0, 0, StageImage, FALSE);
 
 	//アイテムの取得個数を描画
-	for(int i=0;i<ITEM_MAX;i++)
+	for (int i = 0; i < ITEM_MAX; i++)
 	{
 		DrawRotaGraph(540, 245 + i * 30, 0.5f, 0, BlockImage[i + 1], TRUE, 0);
 		DrawFormatString(580, 235 + i * 30, 0xffffff, "%3d", Item[i]);
@@ -150,8 +150,8 @@ void StageDraw(void) {
 		BLOCKSIZE, BlockImage[9], TRUE);
 	if (ClickStatus != E_NONE)
 	{
-	DrawGraph(Select[NEXT_CURSOR].x * BLOCKSIZE,
-		Select[NEXT_CURSOR].y *BLOCKSIZE, BlockImage[9], TRUE);
+		DrawGraph(Select[NEXT_CURSOR].x * BLOCKSIZE,
+			Select[NEXT_CURSOR].y * BLOCKSIZE, BlockImage[9], TRUE);
 	}
 
 	//ミッションを描画
@@ -176,7 +176,7 @@ void CreateBlock(void)
 
 	{
 		Check = 0;
-		for (i = 0; j < HEIGHT; j++)
+		for (i = 0; i < HEIGHT; i++)
 		{
 			for (j = 0; j < WIDTH; j++)
 			{
@@ -188,8 +188,8 @@ void CreateBlock(void)
 				else
 				{
 					Block[i][j].flg = TRUE;
-					Block[i][j].x(j - 1)* BLOCKSIZE;
-					Block[i][j].y(i - 1)* BLOCKSIZE;
+					Block[i][j].x = (j - 1) * BLOCKSIZE;
+					Block[i][j].y = (i - 1) * BLOCKSIZE;
 					Block[i][j].width = BLOCKSIZE;
 					Block[i][j].height = BLOCKSIZE;
 					Block[i][j].image = GetRand(7) + 1;//1～8の乱数
@@ -227,7 +227,7 @@ void CreateBlock(void)
 void  SelectBlock(void)
 {
 	int TmpBlock;
-	int ReSult;
+	int Result;
 
 
 	//カーソル座標の取得
@@ -287,7 +287,282 @@ void  SelectBlock(void)
 
 		//連鎖が3つ以上か調べる。
 		Result = 0;
-		Result + combo_check(Select[NEXT_CURSOR].y + 1, Select[TMP_CURSOR].x + 1);
+		Result += combo_check(Select[NEXT_CURSOR].y + 1, Select[NEXT_CURSOR].x + 1);
+		Result += combo_check(Select[TMP_CURSOR].y + 1, Select[TMP_CURSOR].x + 1);
 
+		//連鎖が3未満なら選択ブロックを元に戻す
+		if (Result == 0)
+		{
+
+			int TmpBlock = Block[Select[NEXT_CURSOR].y + 1][Select[NEXT_CURSOR].x + 1].image;
+			Block[Select[NEXT_CURSOR].y + 1][Select[NEXT_CURSOR].x + 1].image = Block[Select[TMP_CURSOR].y + 1][Select[TMP_CURSOR].x + 1].image;
+			Block[Select[TMP_CURSOR].y + 1][Select[TMP_CURSOR].x + 1].image = TmpBlock;
+		}
+		else
+		{
+			//連鎖が3つ以上ならブロックを消しブロック移動処理へ移行する
+			Stage_State = 1;
+		}
+		//次にクリックできるようにClockFlagを0にする
+		ClickStatus = E_NONE;
+	}
+}
+
+
+void FadeOutBlock(void)
+{
+	static int BlendMode = 255;
+	int i, j;
+
+	//フェードアウト効果音
+	if (CheckSoundMem(FadeOutSE) == 0)
+	{
+		PlaySoundMem(FadeOutSE, DX_PLAYTYPE_BACK);
+	}
+
+	//描画モードをアルファブレンドにする
+	SetDrawBlendMode(DX_BLENDGRAPHTYPE_ALPHA, BlendMode);
+	for (i = 1; i < HEIGHT - 1; i++)
+	{
+		for (j = 1; j < WIDTH - 1; j++)
+		{
+			if (Block[i][j].image == 0)
+			{
+				DrawGraph(Block[i][j].x, Block[i][j].y, BlockImage[Block[i][j].backup], TRUE);
+			}
+		}
+	}
+
+	//描画モードをノーブレンドにする
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+	BlendMode -= 5;
+
+	if (BlendMode == 0)
+	{
+		BlendMode = 255;
+		Stage_State = 2;
+		StopSoundMem(FadeOutSE);
+	}
+}
+
+
+void MoveBlock(void)
+{
+	int i, j, k;
+	//ブロック移動効果音
+	PlaySoundMem(MoveBlockSE, DX_PLAYTYPE_BACK);
+
+	//↓へ移動する処理
+	for (i = 1; i < HEIGHT - 1; j++)
+	{
+		for (j = 1; j < WIDTH - 1; j++)
+		{
+			if (Block[i][j].image == 0)
+			{
+				for (k = i; k > 0; k--)
+				{
+					Block[k][j].image = Block[k - 1][j].image;
+					Block[k - 1][j].image = 0;
+				}
+			}
+		}
+	}
+
+	//空のブロックを生産する処理
+	for (i = 1; i < HEIGHT - 1; i++)
+	{
+		for (j = 1; j < WIDTH - 1; j++)
+		{
+			if (Block[i][j].image == 0)
+			{
+				Block[i][j].image = GetRand(7) + 1;
+			}
+		}
+	}
+
+	//連鎖チェックへ移行する
+	Stage_State = 3;
+}
+
+
+void CheckBlock(void)
+{
+	int Result = 0;
+	int i, j;
+
+	//ブロック連鎖チェック
+	for (i = 1; i < HEIGHT - 1; i++)
+	{
+		for (j = 1; j < WIDTH - 1; j++)
+		{
+			Result += combo_check(i, j);
+		}
+	}
+	//連鎖がなくなればブロック選択へ
+	//そうでなければブロック移動へ移行して連鎖チェックを継続する
+	if (Result == 0)
+	{
+		//クリアチェック処理へ移行する。
+		Stage_State = 4;
+	}
+	else
+	{
+		//連鎖が3つ以上ならブロックを消しブロック移動処理へ移行する
+		Stage_State = 1;
+	}
+}
+
+void CheckClear(void)
+{
+	int i;
+	for (i = 0; i < ITEM_MAX; i++)
+	{
+		if (Item[i] >= Stage_Mission)
+		{
+			ClearFlag = TRUE;
+			break;
+		}
+	}
+	if (ClearFlag != TRUE)
+	{
+		Stage_State = 0;
+	}
+}
+
+
+int Get_StageState(void)
+{
+	return Stage_State;
+}
+
+int Get_StageClearFlag(void)
+{
+	return ClearFlag;
+}
+
+int Get_StageScore(void)
+{
+	return Stage_Score;
+}
+
+void Set_StageMission(int mission)
+{
+	Stage_Mission += mission;
+}
+
+int combo_check(int y, int x)
+{
+	int ret = FALSE;
+
+	//縦方向のチェック
+	int CountH = 0;
+	int ColorH = 0;
+	save_block();
+	combo_check_h(y, x, &CountH, &ColorH);
+	if (CountH < 3)
+	{
+		restore_block();     //3個未満なら戻す
+	}
+
+	//横方向のチェック
+	int CountW = 0;
+	int ColorW = 0;
+	save_block();
+	combo_check_w(y, x, &CountW, &ColorW);
+	if (CountW < 3)
+	{
+		restore_block();
+	}
+
+	//3つ以上で並んでいるか？
+	if ((CountH >= 3 || CountW >= 3))
+	{
+		if (CountH >= 3)
+		{
+			Item[ColorH - 1] += CountH;
+			Stage_Score += CountH * 10;
+		}
+		if (CountW >= 3)
+		{
+			Item[ColorW - 1] += CountW;
+			Stage_Score += CountW * 10;
+		}
+		ret = TRUE;
+	}
+
+	return ret;
+
+}
+
+
+void combo_check_h(int y, int x, int* cnt, int* col)
+{
+	int Color = 0;
+	//対象のブロックが外枠の場合はreturnで処理を抜ける
+
+	if (Block[y][x].image == 0)
+	{
+		return;
+	}
+	*col = Block[y][x].image;
+	Color = Block[y][x].image;
+	Block[y][x].image = 0;
+	(*cnt)++;
+
+	if (Block[y + 1][x].image == Color)
+	{
+		combo_check_h(y + 1, x, cnt, col);
+	}
+	if (Block[y - 1][x].image == Color)
+	{
+		combo_check_h(y - 1, x, cnt, col);
+	}
+}
+
+
+void combo_check_w(int y, int x, int* cnt, int* col)
+{
+	int Color = 0;
+	//対象ブロックが外枠の場合returnで処理を抜ける
+
+	if (Block[y][x].image == 0)
+	{
+		return;
+	}
+
+	*col = Block[y][x].image;
+	Color = Block[y][x].image;  //色取得
+	Block[y][x].image = 0;
+	(*cnt)++;
+
+	if (Block[y][x + 1].image == Color)
+	{
+		combo_check_w(y, x - 1, cnt, col);
+	}
+}
+
+void save_block(void)
+{
+	int i, j;
+	for (i = 0; i < HEIGHT; i++)
+	{
+		for (j = 0; j < WIDTH; j++)
+		{
+			Block[i][j].backup = Block[i][j].image;
+		}
+	}
+}
+
+void restore_block(void)
+{
+	int i, j;
+
+	for (i = 0; i < HEIGHT; i++)
+	{
+		for (j = 0; j < WIDTH; j++)
+		{
+			Block[i][j].image = Block[i][j].backup;
+		}
 	}
 }

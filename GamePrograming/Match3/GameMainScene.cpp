@@ -13,7 +13,7 @@ int GameTime;
 int GameCount; //初期化されないようにするためのカウント
 int ReStartFlag;
 
-int NumderImage[NUMBER_IMAGE_MAX];  //数字用画像
+int NumberImage[NUMBER_IMAGE_MAX]; //数字用画像
 
 int GameMainScene_Initialize(void)
 {
@@ -59,20 +59,20 @@ void GameMainScene_Update(void)
 {
 	switch (Get_StageState())
 	{
-		case 0;
-			SelecBlock();   //ブロックを選択する。
-			break;
-	    case 2;
-			MoveBlock();   //ブロックを移動させる。
-			break;
-		case 3;
-		    CheckBlock();     //ブロックの確認
-		    break;
-		case 4;
-			CheckClear();  //クリアチェック
-			break;
-	    default;
-		    break;
+	case 0:
+		SelectBlock();   //ブロックを選択する。
+		break;
+	case 2:
+		MoveBlock();   //ブロックを移動させる。
+		break;
+	case 3:
+		CheckBlock();     //ブロックの確認
+		break;
+	case 4:
+		CheckClear();  //クリアチェック
+		break;
+	default:
+		break;
 	}
 	//制限時間がなくなったら、ゲームオーバーに遷移する
 	if (GameTime < 0)
@@ -103,7 +103,7 @@ void GameMainScene_Draw(void)
 	}
 	//レベルを描画
 	do {
-		DrawRotaGraph(PosX, 80, 0.5f, 0,NumberImage[tmp_level % 10], TRUE);
+		DrawRotaGraph(PosX, 80, 0.5f, 0, NumberImage[tmp_level % 10], TRUE);
 		tmp_level /= 10;
 		PosX -= 30;
 	} while (tmp_level > 0);
@@ -111,8 +111,8 @@ void GameMainScene_Draw(void)
 	//スコアの描画
 	PosX = 620;
 	do {
-		DrawRotaGraph(PosX, 160, 0.3f, 0,NumberImade[tmp_score % 10],
-TRUE);
+		DrawRotaGraph(PosX, 160, 0.3f, 0, NumberImage[tmp_score % 10],
+			TRUE);
 		tmp_score /= 10;
 		PosX -= 20;
 	} while (tmp_score > 0);

@@ -9,8 +9,8 @@
 #define SCREEN_COLORBIT (32) //スクリーンカラービット
 #define FONT_SIZE (20)  //文字サイズ
 
-int WINAPI WinMain(_In_HINSTANCE hInstance, _IN_opt_HINSTANCE hPrevInstance,
-	_In_LPSTR lpCmdLine, _In_int nShowCmd)
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
+	_In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
 	//ウィンドウタイトル設定
 	SetMainWindowText("Match 3 Puzzle");
@@ -23,9 +23,9 @@ int WINAPI WinMain(_In_HINSTANCE hInstance, _IN_opt_HINSTANCE hPrevInstance,
 	//エラーが発生したら、終了する
 	if (DxLib_Init() == D_ERROR)
 	{
-		return D_ERROE;
+		return D_ERROR;
 	}
-	
+
 	//各機能の初期化処理
 	FreamControl_Initialize();  //フレームレート制御機能
 	Input_Initialize();  //入力制御機能

@@ -24,6 +24,7 @@ void Input_Updata(void)
 	//マウスカーソル座標の取得
 	GetMousePoint(&mouse_position_x, &mouse_position_y);
 
+
 }
 
 int Input_Escape(void)

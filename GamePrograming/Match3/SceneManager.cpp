@@ -6,7 +6,7 @@
 
 
 GAME_MODE Game_Mode;       //ゲームモード情報(現在)
-GAME_MODE Nezt_Mode;       //ゲームモード情報(次）
+GAME_MODE Next_Mode;       //ゲームモード情報(次）
 
 int SceneManager_Initialize(GAME_MODE mode)
 {
@@ -48,32 +48,32 @@ int SceneManager_Initialize(GAME_MODE mode)
 }
 
 
-void SceneManaGer_Update(void)
+void SceneManager_Update(void)
 {
-		//前フレームとゲームモードが違っていたらシーンを切り替える
+	//前フレームとゲームモードが違っていたらシーンを切り替える
 	if (Game_Mode != Next_Mode)
 	{
 		SceneManager_Initialize(Next_Mode);
 	}
-	
+
 
 	//各画面の更新処理
 	switch (Game_Mode)
 	{
-		case E_TITLE;
-			TitleScene_Update();
-			break;
-		case E_GAMEMAIN;
-			GameMainScene_Update();
-			break;
-		case E_GAME_CLEAR;
-			GameClearScene_Update();
-			break;
-		case E_GAME_OVER;
-			GameOverScene_Update();
-			break;
-		default;
-		    break;
+	case E_TITLE:
+		TitleScene_Update();
+		break;
+	case E_GAMEMAIN:
+		GameMainScene_Update();
+		break;
+	case E_GAME_CLEAR:
+		GameClearScene_Update();
+		break;
+	case E_GAME_OVER:
+		GameOverScene_Update();
+		break;
+	default:
+		break;
 	}
 }
 
@@ -81,22 +81,22 @@ void SceneManaGer_Update(void)
 void SceneManager_Draw(void)
 {
 	//各画面の描画処理
-	swith(Game_Mode);
+	switch (Game_Mode)
 	{
-			case E_TITLE;
-				TitleScene_Draw();
-				break;
-			case E_GAMEMAIN;
-				GameMainScene_Draw();
-				break;
-			case E_GAME_CLEAR;
-				GameClearScene_Draw();
-				break;
-			case E_GAME_OVER;
-				GameOverScene_Draw();
-				break;
-			default;
-				break;
+	case E_TITLE:
+		TitleScene_Draw();
+		break;
+	case E_GAMEMAIN:
+		GameMainScene_Draw();
+		break;
+	case E_GAME_CLEAR:
+		GameClearScene_Draw();
+		break;
+	case E_GAME_OVER:
+		GameOverScene_Draw();
+		break;
+	default:
+		break;
 	}
 }
 

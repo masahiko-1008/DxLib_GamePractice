@@ -6,7 +6,7 @@ int GameOverImage;
 int GameOverSE;
 int GameOverFlag;
 
-int GameOverScene_initialize(void)
+int GameOverScene_Initialize(void)
 {
 	int ret = 0;
 
