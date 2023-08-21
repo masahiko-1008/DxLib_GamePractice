@@ -15,7 +15,7 @@ void Input_Initialize(void)
 	mouse_position_y = NULL;
 }
 
-void Input_Updata(void)
+void Input_Update(void)
 {
 	//ƒ}ƒEƒX“ü—Íî•ñ‚Ìæ“¾
 	old_button = now_button;

@@ -1,6 +1,6 @@
 #pragma once
 void Input_Initialize(void);
-void Input_Updata(void);
+void Input_Update(void);
 int Input_Escape(void);
 
 int GetOldKey(int key);
