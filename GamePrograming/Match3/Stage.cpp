@@ -90,6 +90,7 @@ int StageInitialize(void)
 	for (i = 0; i < 3; i++)
 	{
 		Select[i].x = 0;
+
 		Select[i].y = 0;
 	}
 
@@ -254,6 +255,7 @@ void  SelectBlock(void)
 
 	//クリックでブロックを選択
 	if (GetKeyFlg(MOUSE_INPUT_LEFT)) {
+		
 		//クリック効果音
 		PlaySoundMem(ClickSE, DX_PLAYTYPE_BACK);
 

@@ -46,6 +46,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	while (ProcessMessage() != D_ERROR && Input_Escape() == FALSE)
 	{
 		//入力制御機能更新処理
+		Input_Update();
+
+		//シーンマネージャー更新処理
 		SceneManager_Update();
 
 		//画面クリア
