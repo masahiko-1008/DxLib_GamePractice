@@ -283,9 +283,14 @@ void  SelectBlock(void)
 	//選択ブロックを交換する。
 	if (ClickStatus == E_SECOND)
 	{
+
 		TmpBlock = Block[Select[NEXT_CURSOR].y + 1][Select[NEXT_CURSOR].x + 1].image;
 
-		Block[Select[NEXT_CURSOR].y + 1][Select[NEXT_CURSOR].x + 1].image = Block[Select[TMP_CURSOR].y + 1][Select[TMP_CURSOR].x + 1].image = TmpBlock;
+		Block[Select[NEXT_CURSOR].y + 1][Select[NEXT_CURSOR].x + 1].image =
+			Block[Select[TMP_CURSOR].y + 1][Select[TMP_CURSOR].x + 1].image;
+
+		Block[Select[TMP_CURSOR].y + 1][Select[TMP_CURSOR].x + 1].image =
+			 TmpBlock;
 
 		//連鎖が3つ以上か調べる。
 		Result = 0;
@@ -297,7 +302,10 @@ void  SelectBlock(void)
 		{
 
 			int TmpBlock = Block[Select[NEXT_CURSOR].y + 1][Select[NEXT_CURSOR].x + 1].image;
-			Block[Select[NEXT_CURSOR].y + 1][Select[NEXT_CURSOR].x + 1].image = Block[Select[TMP_CURSOR].y + 1][Select[TMP_CURSOR].x + 1].image;
+
+			Block[Select[NEXT_CURSOR].y + 1][Select[NEXT_CURSOR].x + 1].image = 
+				Block[Select[TMP_CURSOR].y + 1][Select[TMP_CURSOR].x + 1].image;
+
 			Block[Select[TMP_CURSOR].y + 1][Select[TMP_CURSOR].x + 1].image = TmpBlock;
 		}
 		else
@@ -356,7 +364,7 @@ void MoveBlock(void)
 	PlaySoundMem(MoveBlockSE, DX_PLAYTYPE_BACK);
 
 	//↓へ移動する処理
-	for (i = 1; i < HEIGHT - 1; j++)
+	for (i = 1; i < HEIGHT - 1; i++)
 	{
 		for (j = 1; j < WIDTH - 1; j++)
 		{
@@ -539,6 +547,10 @@ void combo_check_w(int y, int x, int* cnt, int* col)
 	(*cnt)++;
 
 	if (Block[y][x + 1].image == Color)
+	{
+		combo_check_w(y, x + 1, cnt, col);
+	}
+	if (Block[y][x - 1].image == Color)
 	{
 		combo_check_w(y, x - 1, cnt, col);
 	}
