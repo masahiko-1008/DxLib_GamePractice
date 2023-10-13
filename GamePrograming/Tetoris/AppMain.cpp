@@ -5,10 +5,10 @@
 #include"InputControl.h"
 
 //マクロ定義
-#define SCREEN_HEIGHT(720)
-#define SCREEN_WIDTH(1280)
-#define SCREEN_COLORBIT(32)
-#define FONT_SIZE(20)
+#define SCREEN_HEIGHT (720)
+#define SCREEN_WIDTH (1280)
+#define SCREEN_COLORBIT (32)
+#define FONT_SIZE (20)
 
 //プログラムの開始
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
@@ -34,7 +34,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	FreamControl_Initialize();
 
 	//シーン管理機能初期化処理
-	SceneManager_Initialize();
+	SceneManager_Initialize(E_TITLE);
 
 	//入力制御機能初期化処理
 	InputControl_Initialize();
@@ -46,7 +46,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	SetFontSize(FONT_SIZE);
 
 	//ゲームループ
-	while (ProcessMessage() == 0 && GetExitButtoon() != TRUE && ErrorCheck() ==
+	while (ProcessMessage() == 0 && GetExitButton() != TRUE && ErrorCheck() ==
 		D_NORMALITY)
 	{
 		//フレーム制御機能更新処理
