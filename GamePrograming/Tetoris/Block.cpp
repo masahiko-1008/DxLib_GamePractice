@@ -338,5 +338,82 @@ void create_block(void)
 
 void move_block(void)
 {
+	//左入力時
+	if (GetButtonDown(XINPUT_BUTTON_DPAD_LEFT))
+	{
+		if (check_overlap(DropBlock_X - 1, DropBlock_Y) == TRUE)
+		{
+			DropBlock_X--;
+		}
+	}
 
+	//右入力時
+	if (GetButtonDown(XINPUT_BUTTON_DPAD_RIGHT))
+	{
+		if (check_overlap(DropBlock_X + 1, DropBlock_Y) == TRUE)
+		{
+			DropBlock_X++;
+		}
+	}
+
+	//上入力時(ハードドロップ処理)
+	if (GetButtonDown(XINPUT_BUTTON_DPAD_UP))
+	{
+		while (check_overlap(DropBlock_X, DropBlock_Y + 1) == TRUE)
+		{
+			DropBlock_Y++;
+		}
+	}
+
+	//下入力時(ソフトドロップ処理)
+	if (GetButton(XINPUT_BUTTON_DPAD_DOWN))
+	{
+		if (check_overlap(DropBlock_X, DropBlock_Y + 1) == TRUE)
+		{
+			DropBlock_Y++;
+		}
+	}
 }
+
+//ブロック機能：ストック交換処理
+//引数：なし
+//戻り値：なし
+
+void change_block(void)
+{
+	BLOCK_STATE temp[BLOCK_TROUT_SIZE][BLOCK_TROUT_SIZE] = { E_BLOCK_EMPTY };  //退避領域
+
+	int i, j;  //ループカウンタ
+
+	//ストック先が空かどうか確認
+	if (Stock_Flg == TRUE)
+	{
+		for (i = 0; i < BLOCK_TROUT_SIZE; i++)
+		{
+			for (j = 0; j < BLOCK_TROUT_SIZE; j++)
+			{
+				temp[i][j] = DropBlock[i][j];
+				DropBlock[i][j] = Stock[i][j];
+				Stock[i][j] = temp[i][j];
+			}
+		}
+	}
+	else
+	{
+		Stock_Flg = TRUE;
+		for (i = 0; i < BLOCK_TROUT_SIZE; i++)
+		{
+			for (j = 0; j < BLOCK_TROUT_SIZE; j++)
+			{
+				Stock[i][j] = DropBlock[i][j];
+			}
+		}
+		//新しいブロックの設定と次のブロックの生成
+		create_block();
+	}
+}
+
+//ブロック機能：ブロックの交換処理
+//引数：回転指せる向き(0:時計回り 1:反時計回り)
+//戻り値：なし
+
