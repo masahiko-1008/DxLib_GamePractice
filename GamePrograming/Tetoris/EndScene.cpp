@@ -10,4 +10,39 @@ int wait_count;
 int EndScene_Initialize(void)
 {
 	int ret = 0;
+
+	wait_count = 0;
+
+	return ret;
+}
+
+//エンド画面：更新処理
+//引数：なし
+//戻り値：なし
+
+void EndScene_Update(void)
+{
+	wait_count++;
+}
+
+//エンド画面：描画処理
+//引数:なし
+//戻り値:なし
+
+void EndScene_Draw(void)
+{
+	DrawString(10, 10, "エンド画面です", GetColor(255, 255, 255));
+}
+
+//エンド画面：終了確認処理
+//引数：なし
+//戻り値：なし
+
+int Get_EndTime(void)
+{
+	if (wait_count > 300)
+	{
+		return TRUE;
+	}
+	return FALSE;
 }
