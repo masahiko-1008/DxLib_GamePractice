@@ -53,5 +53,32 @@ void GameMainScene_Update(void)
 	if (Get_GenerateFlg() != TRUE)
 	{
 		PlaySoundMem(GameOver_sound, DX_PLAYTYPE_BACK, FALSE);
+		change_Scene(E_RANKING);
+		StopSoundMem(BackGround_sound);
 	}
+}
+
+//ゲームメイン画面：描画処理
+//引数：なし
+//戻り値：なし
+
+void GemeMainScene_Draw(void)
+{
+	//背景の描画
+	DrawGraph(0, 0, BackGround_image, TRUE);
+	//ブロックの描画
+	Block_Draw();
+	SetFontSize(100);
+	//スコアを描画
+	DrawFormatString(800, 100, GetColor(255, 255, 255), "%d", Score);
+	SetFontSize(20);
+}
+
+//ゲームメイン画面：スコア取得処理
+//引数：なし
+//戻り値：なし
+
+int Get_Score(void)
+{
+	return Score;
 }
