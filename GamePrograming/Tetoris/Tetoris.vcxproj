@@ -137,6 +137,7 @@
     <ClCompile Include="FreamControl.cpp" />
     <ClCompile Include="GameMainScene.cpp" />
     <ClCompile Include="lnputControl.cpp" />
+    <ClCompile Include="RankingScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
