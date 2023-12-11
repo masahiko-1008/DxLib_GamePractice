@@ -4,20 +4,20 @@
 
 //マクロ定義
 
-#define FIELD_HEIGHT (21)  //フィールドのマスの高さ
-#define FIELD_WIDTH (12)  //フィールドのマスの幅
-#define BLOCK_TROUT_SIZE (4)  //ブロックのマスの幅
-#define BLOCK_SIZE (36)  //1ブロック当たりのサイズ
-#define BLOCK_TYPE_MAX (7)  //落ちてくるブロックの種類
-#define BLOCK_NEXT_POS_X (700)  //次のブロックの座標(X座標)
-#define BLOCK_NEXT_POS_Y (500)  //次のブロックの座標(Y座標)
-#define BLOCK_STOCK_POS_X (500)  //ストックされたブロックの座標(X座標)
-#define BLOCK_STOCK_POS_Y (350)  //ストックされたブロックの座標(Y座標)
-#define DROP_BLOCK_INIT_X (4)  //落ちてくるブロックの初期X座標
-#define DROP_BLOCK_INIT_Y (-1)  //落ちてくるブロックの初期Y座標
-#define DROP_SPEED (60)  //落下時間
-#define TURN_CROCKWICE (0)  //時計回りに回転される
-#define TURN_ANTICROCKWICE (1)  //反時計回りに回転させる
+#define FIELD_HEIGHT       (21)  //フィールドのマスの高さ
+#define FIELD_WIDTH        (12)  //フィールドのマスの幅
+#define BLOCK_TROUT_SIZE   (4)   //ブロックのマスの幅
+#define BLOCK_SIZE         (36)  //1ブロック当たりのサイズ
+#define BLOCK_TYPE_MAX     (7)   //落ちてくるブロックの種類
+#define BLOCK_NEXT_POS_X   (700) //次のブロックの座標(X座標)
+#define BLOCK_NEXT_POS_Y   (500) //次のブロックの座標(Y座標)
+#define BLOCK_STOCK_POS_X  (500) //ストックされたブロックの座標(X座標)
+#define BLOCK_STOCK_POS_Y  (350) //ストックされたブロックの座標(Y座標)
+#define DROP_BLOCK_INIT_X  (4)   //落ちてくるブロックの初期X座標
+#define DROP_BLOCK_INIT_Y  (-1)  //落ちてくるブロックの初期Y座標
+#define DROP_SPEED         (60)  //落下時間
+#define TURN_CROCKWICE     (0)   //時計回りに回転される
+#define TURN_ANTICROCKWICE (1)   //反時計回りに回転させる
 
 //型定義
 
@@ -145,7 +145,7 @@ BLOCK_SIZE, BlockImage);
 	//ストックフラグの初期化
 	Stock_Flg = FALSE;
 	//生成フラグの初期化
-	Generate_Flg = FALSE;
+	Generate_Flg = TRUE;
 	//消したラインの数の初期化
 	DeleteLine = 0;
 
@@ -239,8 +239,8 @@ void Block_Draw(void)
 			//次のブロックを描画
 			DrawGraph(BLOCK_SIZE * j + BLOCK_NEXT_POS_X, BLOCK_SIZE * i +
 BLOCK_NEXT_POS_Y, BlockImage[Next[i][j]], TRUE);
-			//ストックされたブロックえお描画
-			DrawGraph(BLOCK_SIZE * j + BLOCK_NEXT_POS_X, BLOCK_SIZE * i +
+			//ストックされたブロックを描画
+			DrawGraph(BLOCK_SIZE * j + BLOCK_STOCK_POS_X, BLOCK_SIZE * i +
 BLOCK_STOCK_POS_Y, BlockImage[Stock[i][j]], TRUE);
 		}
 	}
@@ -249,7 +249,7 @@ BLOCK_STOCK_POS_Y, BlockImage[Stock[i][j]], TRUE);
 	{
 		for (j = 0; j < BLOCK_TROUT_SIZE; j++)
 		{
-			DrawGraph((DropBlock_X + j) * BLOCK_SIZE, (DropBlock_Y + 1) * BLOCK_SIZE,
+			DrawGraph((DropBlock_X + j) * BLOCK_SIZE, (DropBlock_Y + i) * BLOCK_SIZE,
 BlockImage[DropBlock[i][j]], TRUE);
 		}
 	}
@@ -312,7 +312,7 @@ void create_block(void)
 	block_type = GetRand(BLOCK_TYPE_MAX - 1);
 
 	//新しいブロックをセット＆次のブロックを生成
-	for (i = 0; i < BLOCK_TROUT_SIZE; j++)
+	for (i = 0; i < BLOCK_TROUT_SIZE; i++)
 	{
 		for (j = 0; j < BLOCK_TROUT_SIZE; j++)
 		{

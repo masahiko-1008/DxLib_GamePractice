@@ -53,7 +53,7 @@ void GameMainScene_Update(void)
 	if (Get_GenerateFlg() != TRUE)
 	{
 		PlaySoundMem(GameOver_sound, DX_PLAYTYPE_BACK, FALSE);
-		change_Scene(E_RANKING);
+		Change_Scene(E_RANKING);
 		StopSoundMem(BackGround_sound);
 	}
 }
@@ -62,7 +62,7 @@ void GameMainScene_Update(void)
 //ˆø”F‚È‚µ
 //–ß‚è’lF‚È‚µ
 
-void GemeMainScene_Draw(void)
+void GameMainScene_Draw(void)
 {
 	//”wŒi‚Ì•`‰æ
 	DrawGraph(0, 0, BackGround_image, TRUE);

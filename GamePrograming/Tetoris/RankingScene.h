@@ -5,7 +5,7 @@
 #define RANKING_DISP_MODE  (2)
 
 //プロトタイプ宣言
-int RankingScene_Initilize(void);
+int RankingScene_Initialize(void);
 void RankingScene_Update(void);
 void RankingScene_Draw(void);
 
